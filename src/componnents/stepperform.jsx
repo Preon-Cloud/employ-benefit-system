@@ -225,6 +225,7 @@ function StepperForm() {
                   No
                 </label>
                 {formData.paternityLeave === "yes" && (
+                  
                   <input
                     type="number"
                     placeholder="How many weeks in the calendar year?"
@@ -265,6 +266,10 @@ function StepperForm() {
                   No
                 </label>
                 {formData.participate401k === "yes" && (
+                  <div className="relative">
+                      <span className="absolute inset-y-0 right-5 flex items-center pl-3">
+ %
+    </span>
                   <input
                     type="number"
                     placeholder="What percentage of your salary do you contribute?"
@@ -273,6 +278,7 @@ function StepperForm() {
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-md transition-all duration-1000 ease-in-out hover:scale-105 text-gray-700 font-medium border-solid border-2 border-gray-200"
                   />
+                  </div>
                 )}
               </div>
             )}
@@ -303,6 +309,10 @@ function StepperForm() {
                   No
                 </label>
                 {formData.isSalesProfessional === "yes" && (
+                          <div className="relative">
+                          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+     $
+        </span>
                   <input
                     type="text"
                     placeholder="Input your target compensation for the year as a dollar amount"
@@ -312,6 +322,7 @@ function StepperForm() {
                     className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
                     maxLength={500}
                   />
+                </div>
                 )}
               </div>
             )}
