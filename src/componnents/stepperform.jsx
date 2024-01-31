@@ -124,7 +124,7 @@ function StepperForm() {
       ) : (
         <form
           id="signUpForm"
-          className="px-10 py-10 shadow-md rounded-2xl bg-white mx-auto border-solid border-2 border-gray-100 mb-8 transition-transform duration-500 ease-in-out transform hover:scale-105"
+          className="px-10 py-10 shadow-md rounded-2xl bg-white mx-auto border-solid border-2 border-gray-100 mb-8 transition-transform duration-1000 ease-in-out transform hover:scale-105"
           action="#!"
           style={{ width: "500px" }}
         >
@@ -163,7 +163,7 @@ function StepperForm() {
             ))}
           </ol>
 
-          <div className="mt-10 mb-10 transition-opacity duration-500 ease-in-out opacity-50 hover:opacity-100">
+          <div className="mt-10 mb-10 ">
             <p
               className="text-2xl text-center mb-10"
               style={{ fontSize: "20px", marginBottom: "20px" }}
@@ -176,7 +176,7 @@ function StepperForm() {
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
               >
                 <option value="">Select your country</option>
                 {customCountryList.map((country, index) => (
@@ -195,7 +195,7 @@ function StepperForm() {
                   name="year"
                   value={formData.year}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 mb-10 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                  className="w-full px-4 py-3 mb-10 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
                   style={{ marginBottom: "10px" }}
                 />
 
@@ -205,7 +205,7 @@ function StepperForm() {
                   name="salary"
                   value={formData.salary}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200 mt-3"
+                  className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200 mt-3"
                 />
               </div>
             )}
@@ -244,7 +244,7 @@ function StepperForm() {
                     name="paternityLeaveWeeks"
                     value={formData.paternityLeaveWeeks}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                    className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
                   />
                 )}
               </div>
@@ -284,7 +284,7 @@ function StepperForm() {
                     name="contributeTo401k"
                     value={formData.contributeTo401k}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                    className="w-full px-4 py-3 rounded-md transition-all duration-1000 ease-in-out hover:scale-105 text-gray-700 font-medium border-solid border-2 border-gray-200"
                   />
                 )}
               </div>
@@ -322,7 +322,7 @@ function StepperForm() {
                     name="targetCompensation"
                     value={formData.targetCompensation}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                    className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
                     maxLength={500}
                   />
                 )}
@@ -334,7 +334,7 @@ function StepperForm() {
                 <p hidden>Estimate how many equity shares you have.</p>
                 <input
                   type="number"
-                  placeholder="Estimate how many equity shares you have"
+                  placeholder="Estimate how many equity shares you have transition-all duration-1000 ease-in-out hover:scale-105"
                   name="equityShares"
                   value={formData.equityShares}
                   onChange={handleChange}
@@ -405,7 +405,7 @@ function StepperForm() {
                       name="biweeklyContribution"
                       value={formData.biweeklyContribution}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                      className="w-full px-4 transition-all duration-1000 ease-in-out hover:scale-105 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
                     />
                   </div>
                 )}
