@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import SummaryForm from "./Sumarrayform";
-// import { SummaryForm } from "./Sumarrayform";
-// import SummaryForm from "summaryForm.jsx";
 
 function StepperForm() {
   const [step, setStep] = useState(1);
@@ -18,12 +16,15 @@ function StepperForm() {
     healthBenefits: "",
     includeBenefits: "",
     biweeklyContribution: "",
+    targetBonusPercentage: "",
+    greenhouseBenefits: false,
+    carrotBenefits: "",
   });
 
   const nextStep = () => {
     if (step === 1 && formData.country === "") {
       return;
-    } else if (step === 2 && (formData.year === "" || formData.salary === "")) {
+    } else if (step === 2 && formData.salary === "") {
       return;
     } else if (
       step === 3 &&
@@ -61,10 +62,10 @@ function StepperForm() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -83,6 +84,9 @@ function StepperForm() {
       healthBenefits: "",
       includeBenefits: "",
       biweeklyContribution: "",
+      targetBonusPercentage: "",
+      greenhouseBenefits: false,
+      carrotBenefits: "",
     });
   };
 
@@ -90,21 +94,7 @@ function StepperForm() {
     "United States",
     "United Kingdom",
     "Canada",
-    "Australia",
-    "Germany",
-    "France",
-    "Italy",
-    "Japan",
-    "Spain",
-    "China",
-    "Russia",
-    "Mexico",
-    "South Korea",
-    "Netherlands",
-    "Switzerland",
-    "Sweden",
-    "Norway",
-    "Denmark",
+    "Ireland",
   ];
 
   const stepQuestions = [
@@ -115,18 +105,21 @@ function StepperForm() {
     "Are you a sales professional?",
     "Estimate how many equity shares you have.",
     "Health benefits selections",
+    "What is your target bonus as a percentage (CVP)?",
+    "Do you take advantage of Greenhouse Medical Benefits?",
+    "Have you already or do you plan to take advantage of Carrot benefits this year (for family-forming, menopause, low-T)?",
   ];
 
   return (
     <div className="flex my-10 relative flex-col">
-      {step === 8 ? (
+      {step === 11 ? (
         <SummaryForm formData={formData} resetForm={resetForm} />
       ) : (
         <form
           id="signUpForm"
-          className="px-10 py-10 shadow-md rounded-2xl bg-white mx-auto border-solid border-2 border-gray-100 mb-8 transition-transform duration-1000 ease-in-out transform hover:scale-105"
+          className="px-10 py-10 shadow-md rounded-2xl bg-white mx-auto border-solid border-2 border-gray-100 mb-8 "
           action="#!"
-          style={{ width: "500px" }}
+          style={{ width: "660px" }}
         >
           <h1 className="text-lg font-bold rounded-xl text-white px-4 py-4 bg-green-600 text-center">
             Total Reward Calculator
@@ -187,28 +180,22 @@ function StepperForm() {
               </select>
             )}
 
-            {step === 2 && (
-              <div>
-                <input
-                  type="date"
-                  placeholder="Year"
-                  name="year"
-                  value={formData.year}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 mb-10 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
-                  style={{ marginBottom: "10px" }}
-                />
+{step === 2 && (
+  <div className="relative">
+    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+      $
+    </span>
+    <input
+      type="number"
+      placeholder="Annual Base Salary"
+      name="salary"
+      value={formData.salary}
+      onChange={handleChange}
+      className="w-full pl-10 px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200 mt-3"
+    />
+  </div>
+)}
 
-                <input
-                  type="number"
-                  placeholder="Annual Base Salary"
-                  name="salary"
-                  value={formData.salary}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200 mt-3"
-                />
-              </div>
-            )}
 
             {step === 3 && (
               <div>
@@ -334,7 +321,7 @@ function StepperForm() {
                 <p hidden>Estimate how many equity shares you have.</p>
                 <input
                   type="number"
-                  placeholder="Estimate how many equity shares you have transition-all duration-1000 ease-in-out hover:scale-105"
+                  placeholder="Estimate how many equity shares you have"
                   name="equityShares"
                   value={formData.equityShares}
                   onChange={handleChange}
@@ -345,7 +332,6 @@ function StepperForm() {
 
             {step === 7 && (
               <div>
-                {/* <p>Health benefits selections</p> */}
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <label className="flex items-center">
                     <input
@@ -411,6 +397,74 @@ function StepperForm() {
                 )}
               </div>
             )}
+
+            {step === 8 && (
+              <div>
+                <input
+                  type="number"
+                  placeholder="Enter your target bonus percentage"
+                  name="targetBonusPercentage"
+                  value={formData.targetBonusPercentage}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                />
+              </div>
+            )}
+
+{step === 9 && (
+  <div>
+    <label className="flex items-center">
+      <input
+        type="radio"
+        name="greenhouseBenefits"
+        value="yes"
+        checked={formData.greenhouseBenefits === "yes"}
+        onChange={handleChange}
+        className="mr-2 w-6 h-5"
+      />
+      Yes
+    </label>
+    <label className="flex items-center mt-3 mb-5">
+      <input
+        type="radio"
+        name="greenhouseBenefits"
+        value="no"
+        checked={formData.greenhouseBenefits === "no"}
+        onChange={handleChange}
+        className="mr-2 w-6 h-5"
+      />
+      No
+    </label>
+  </div>
+)}
+
+
+            {step === 10 && (
+              <div>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="carrotBenefits"
+                    value="yes"
+                    checked={formData.carrotBenefits === "yes"}
+                    onChange={handleChange}
+                    className="mr-2 w-6 h-5"
+                  />
+                  Yes
+                </label>
+                <label className="flex items-center mt-3 mb-5">
+                  <input
+                    type="radio"
+                    name="carrotBenefits"
+                    value="no"
+                    checked={formData.carrotBenefits === "no"}
+                    onChange={handleChange}
+                    className="mr-2 w-6 h-5"
+                  />
+                  No
+                </label>
+              </div>
+            )}
           </div>
           <div
             className="form-footer align-middle justify-center flex gap-3 max-lg:flex-col"
@@ -428,7 +482,7 @@ function StepperForm() {
               type="button"
               className="border ml- px-10 border-transparent focus:outline-none p-3 rounded-full text-center text-white bg-green-600 hover:bg-green-700 text-lg"
               onClick={nextStep}
-              disabled={step === 8}
+              disabled={step === 11}
             >
               Next
             </button>
