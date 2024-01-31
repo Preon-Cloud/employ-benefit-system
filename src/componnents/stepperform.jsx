@@ -1,41 +1,8 @@
 import React, { useState } from "react";
+import SummaryForm from "./Sumarrayform";
+// import { SummaryForm } from "./Sumarrayform";
+// import SummaryForm from "summaryForm.jsx";
 
-function SummaryForm({ formData, resetForm }) {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted");
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-    <div className="px-4 py-5 sm:px-6">
-      <h2 className="text-lg font-semibold text-gray-800 mb-2">Summary</h2>
-    </div>
-    <div className="border-t border-gray-200">
-      <dl>
-        <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt className="text-sm font-medium text-gray-500">Country</dt>
-          <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{formData.country}</dd>
-        </div>
-        <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt className="text-sm font-medium text-gray-500">Year</dt>
-          <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{formData.year}</dd>
-        </div>
-        <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt className="text-sm font-medium text-gray-500">Salary</dt>
-          <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{formData.salary}</dd>
-        </div>
-        {/* Add other fields here */}
-      </dl>
-    </div>
-    <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-      <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">Submit</button>
-      <button type="button" onClick={resetForm} className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Edit</button>
-    </div>
-  </form>
-  );
-}
 
 function StepperForm() {
   const [step, setStep] = useState(1);
@@ -218,7 +185,7 @@ function StepperForm() {
                 />
 
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Annual Base Salary"
                   name="salary"
                   value={formData.salary}
@@ -359,7 +326,7 @@ function StepperForm() {
 
             {step === 7 && (
               <div>
-                <p>Health benefits selections</p>
+                {/* <p>Health benefits selections</p> */}
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <label className="flex items-center">
                     <input
