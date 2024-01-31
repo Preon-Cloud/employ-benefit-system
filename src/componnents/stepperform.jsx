@@ -3,7 +3,6 @@ import SummaryForm from "./Sumarrayform";
 // import { SummaryForm } from "./Sumarrayform";
 // import SummaryForm from "summaryForm.jsx";
 
-
 function StepperForm() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -22,46 +21,40 @@ function StepperForm() {
   });
 
   const nextStep = () => {
-    // Validation check for step 1
     if (step === 1 && formData.country === "") {
-      // If the country is not selected, prevent moving to the next step
+      return;
+    } else if (step === 2 && (formData.year === "" || formData.salary === "")) {
+      return;
+    } else if (
+      step === 3 &&
+      formData.paternityLeave === "yes" &&
+      formData.paternityLeaveWeeks === ""
+    ) {
+      return;
+    } else if (
+      step === 4 &&
+      formData.participate401k === "yes" &&
+      formData.contributeTo401k === ""
+    ) {
+      return;
+    } else if (
+      step === 5 &&
+      formData.isSalesProfessional === "yes" &&
+      formData.targetCompensation === ""
+    ) {
+      return;
+    } else if (step === 6 && formData.equityShares === "") {
+      return;
+    } else if (
+      step === 7 &&
+      formData.includeBenefits === "yes" &&
+      formData.biweeklyContribution === ""
+    ) {
       return;
     }
-    // Validation check for step 2
-    else if (step === 2 && (formData.year === "" || formData.salary === "")) {
-      // If year or salary is not filled, prevent moving to the next step
-      return;
-    }
-    // Validation check for step 3
-    else if (step === 3 && formData.paternityLeave === "yes" && formData.paternityLeaveWeeks === "") {
-      // If paternity leave is selected but weeks are not filled, prevent moving to the next step
-      return;
-    }
-    // Validation check for step 4
-    else if (step === 4 && formData.participate401k === "yes" && formData.contributeTo401k === "") {
-      // If participating in 401k but contribution is not filled, prevent moving to the next step
-      return;
-    }
-    // Validation check for step 5
-    else if (step === 5 && formData.isSalesProfessional === "yes" && formData.targetCompensation === "") {
-      // If sales professional but target compensation is not filled, prevent moving to the next step
-      return;
-    }
-    // Validation check for step 6
-    else if (step === 6 && formData.equityShares === "") {
-      // If equity shares are not filled, prevent moving to the next step
-      return;
-    }
-    // Validation check for step 7
-    else if (step === 7 && formData.includeBenefits === "yes" && formData.biweeklyContribution === "") {
-      // If benefits are included but biweekly contribution is not filled, prevent moving to the next step
-      return;
-    }
-  
-    // If all required fields are filled, move to the next step
+
     setStep(step + 1);
   };
-  
 
   const prevStep = () => {
     setStep(step - 1);
@@ -94,24 +87,24 @@ function StepperForm() {
   };
 
   const customCountryList = [
-    'United States',
-    'United Kingdom',
-    'Canada',
-    'Australia',
-    'Germany',
-    'France',
-    'Italy',
-    'Japan',
-    'Spain',
-    'China',
-    'Russia',
-    'Mexico',
-    'South Korea',
-    'Netherlands',
-    'Switzerland',
-    'Sweden',
-    'Norway',
-    'Denmark'
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+    "Germany",
+    "France",
+    "Italy",
+    "Japan",
+    "Spain",
+    "China",
+    "Russia",
+    "Mexico",
+    "South Korea",
+    "Netherlands",
+    "Switzerland",
+    "Sweden",
+    "Norway",
+    "Denmark",
   ];
 
   const stepQuestions = [
@@ -131,7 +124,7 @@ function StepperForm() {
       ) : (
         <form
           id="signUpForm"
-          className="px-10 py-10 shadow-md rounded-2xl bg-white mx-auto border-solid border-2 border-gray-100 mb-8"
+          className="px-10 py-10 shadow-md rounded-2xl bg-white mx-auto border-solid border-2 border-gray-100 mb-8 transition-transform duration-500 ease-in-out transform hover:scale-105"
           action="#!"
           style={{ width: "500px" }}
         >
@@ -140,19 +133,41 @@ function StepperForm() {
           </h1>
           <ol className="flex w-auto text-sm px-2 py-4 mt-5 font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm">
             {stepQuestions.map((question, index) => (
-              <li key={index} className={`flex items-center ${index < step - 1 ? 'text-blue-600' : ''}`}>
+              <li
+                key={index}
+                className={`flex items-center ${
+                  index < step - 1 ? "text-blue-600" : ""
+                }`}
+              >
                 <span className="flex items-center justify-center w-5 h-5 ms-3 text-xs border border-blue-600 rounded-full shrink-0">
                   {index + 1}
                 </span>
-                {index !== stepQuestions.length - 1 && <svg className="w-3 h-3 sm:ms-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
-                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m7 9 4-4-4-4M1 9l4-4-4-4"/>
-                </svg>}
+                {index !== stepQuestions.length - 1 && (
+                  <svg
+                    className="w-3 h-3 sm:ms-3 rtl:rotate-180"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 12 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m7 9 4-4-4-4M1 9l4-4-4-4"
+                    />
+                  </svg>
+                )}
               </li>
             ))}
           </ol>
 
-          <div className="mt-10 mb-10">
-            <p className="text-2xl text-center mb-10" style={{ fontSize: "20px", marginBottom: "20px" }}>
+          <div className="mt-10 mb-10 transition-opacity duration-500 ease-in-out opacity-50 hover:opacity-100">
+            <p
+              className="text-2xl text-center mb-10"
+              style={{ fontSize: "20px", marginBottom: "20px" }}
+            >
               {stepQuestions[step - 1]}
             </p>
 
@@ -197,7 +212,9 @@ function StepperForm() {
 
             {step === 3 && (
               <div>
-                <p className="hidden">I plan to take paternity leave this year.</p>
+                <p className="hidden">
+                  I plan to take paternity leave this year.
+                </p>
                 <label className="flex items-center ">
                   <input
                     type="radio"
@@ -235,7 +252,9 @@ function StepperForm() {
 
             {step === 4 && (
               <div>
-                <p className="hidden">I participate in the company’s 401k program.</p>
+                <p className="hidden">
+                  I participate in the company’s 401k program.
+                </p>
                 <label className="flex items-center">
                   <input
                     type="radio"
@@ -365,9 +384,7 @@ function StepperForm() {
                           <th>UK</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {/* Benefit details here */}
-                      </tbody>
+                      <tbody>{/* Benefit details here */}</tbody>
                     </table>
 
                     <p>Average Employer Spend per Employee:</p>
@@ -378,7 +395,9 @@ function StepperForm() {
                     </ul>
 
                     <p>
-                      Alternatively, you can find the biweekly employer contribution in Workday under "Benefits" and input it here:
+                      Alternatively, you can find the biweekly employer
+                      contribution in Workday under "Benefits" and input it
+                      here:
                     </p>
                     <input
                       type="text"
@@ -393,7 +412,10 @@ function StepperForm() {
               </div>
             )}
           </div>
-          <div className="form-footer align-middle justify-center flex gap-3 max-lg:flex-col" style={{ marginTop: "22px" }}>
+          <div
+            className="form-footer align-middle justify-center flex gap-3 max-lg:flex-col"
+            style={{ marginTop: "22px" }}
+          >
             <button
               type="button"
               className="focus:outline-none border-2 border-green-600 py-2 px-5 rounded-full shadow-sm text-center text-gray-700 bg-white hover:bg-gray-100 text-lg"
