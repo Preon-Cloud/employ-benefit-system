@@ -1,124 +1,160 @@
 import React, { useState } from "react";
-import SummaryForm from "./Sumarrayform";
+import EmployChart from "./pieChart";
 
 function StepperForm() {
+  const [totalCompensation, setTotalCompensation] = useState(0);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     country: "",
-    year: "",
     salary: "",
-    paternityLeave: "",
-    paternityLeaveWeeks: "",
-    participate401k: "",
-    contributeTo401k: "",
-    targetCompensation: "",
-    equityShares: "",
-    healthBenefits: "",
-    includeBenefits: "",
-    biweeklyContribution: "",
+    SalaryContribution401k: "",
+    SalaryContribution401kAmount: "",
+    isSalesProfessional: "",
+    salesAnnualCompensation: "",
     targetBonusPercentage: "",
-    greenhouseBenefits: false,
+    totalOptionsGranted: "",
+    greenhouseBenefits: "",
+    biweeklyContribution: "",
     carrotBenefits: "",
+    carrotBenefitsAmount: "",
+    paternityLeave: "",
+    paternityLeaveAmount: "",
+    sabbaticalLeave: "",
+    sabbaticalLeaveAmount: "",
+    sabbaticalLeaveWeeks: "",
+    thriveStipend: 1440.00,
+    EAP: 33.60,
+    LifeGuides: 72.00,
+    Vetster: 18.00,
+    ClassPass: 240.00
   });
 
   const nextStep = () => {
-    if (step === 1 && formData.country === "") {
-      return;
-    } else if (step === 2 && formData.salary === "") {
-      return;
-    } else if (
-      step === 3 &&
-      formData.paternityLeave === "yes" &&
-      formData.paternityLeaveWeeks === ""
-    ) {
-      return;
-    } else if (
-      step === 4 &&
-      formData.participate401k === "yes" &&
-      formData.contributeTo401k === ""
-    ) {
-      return;
-    } else if (
-      step === 5 &&
-      formData.isSalesProfessional === "yes" &&
-      formData.targetCompensation === ""
-    ) {
-      return;
-    } else if (step === 6 && formData.equityShares === "") {
-      return;
-    } else if (
-      step === 7 &&
-      formData.includeBenefits === "yes" &&
-      formData.biweeklyContribution === ""
-    ) {
-      return;
-    }
-
     setStep(step + 1);
   };
 
   const prevStep = () => {
     setStep(step - 1);
   };
-
   const handleChange = (e) => {
+    if (e.target.value === "" || e.target.value === null) return;
+    console.log(e.target.value);
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
+    console.log(formData);
+
   };
 
   const resetForm = () => {
     setStep(1);
     setFormData({
       country: "",
-      year: "",
       salary: "",
-      paternityLeave: "",
-      paternityLeaveWeeks: "",
-      participate401k: "",
-      contributeTo401k: "",
-      targetCompensation: "",
-      equityShares: "",
-      healthBenefits: "",
-      includeBenefits: "",
-      biweeklyContribution: "",
+      SalaryContribution401k: "",
+      SalaryContribution401kAmount: "",
+      isSalesProfessional: "",
+      salesAnnualCompensation: "",
       targetBonusPercentage: "",
-      greenhouseBenefits: false,
+      totalOptionsGranted: "",
+      totalOptionsGrantAmount: "",
+      greenhouseBenefits: "",
+      greenhouseBenefitsAmount: "",
       carrotBenefits: "",
+      carrotBenefitsAmount: "",
+      paternityLeave: "",
+      paternityLeaveAmount: "",
+      sabbaticalLeave: "",
+      sabbaticalLeaveWeeks: "",
+      thriveStipend: 1440.00,
+      EAP: 33.60,
+      LifeGuides: 72.00,
+      Vetster: 18.00,
+      ClassPass: 240.00
+
+
     });
   };
+  const onSubmit = () => {
+    // Destructure formData to make it easier to work with
+    const {
+      salary,
+      SalaryContribution401k,
+      SalaryContribution401kAmount,
+      isSalesProfessional,
+      targetBonusPercentage,
+      totalOptionsGranted,
+      carrotBenefits,
+      paternityLeave,
+      paternityLeaveAmount,
+      sabbaticalLeave,
+      sabbaticalLeaveWeeks,
+      greenhouseBenefits,
+    } = formData;
+console.log("form data before " , formData)
+    const parsedSalary = parseInt(salary);
 
-  const customCountryList = [
-    "United States",
-    "United Kingdom",
-    "Canada",
-    "Ireland",
-  ];
+    const totalCompensation =
+      parsedSalary +
+      (SalaryContribution401k === "yes" ? parseInt(SalaryContribution401kAmount) : 0) +
+      (isSalesProfessional === "yes" ? 0 : parsedSalary * (parseInt(targetBonusPercentage) / 100)) +
+      parseInt(totalOptionsGranted) +
+      (carrotBenefits === "yes" ? 10852.40 : 0) +
+      (paternityLeave === "yes" ? parseInt(paternityLeaveAmount) : 0) +
+      (sabbaticalLeave === "yes" ? (parsedSalary / 52) * parseInt(sabbaticalLeaveWeeks) : 0) +
+      1440.00 + 33.60 + 72.00 + 18.00 + 240.00;
+
+    const contributionAmount =
+      parseInt(SalaryContribution401kAmount) > 2
+        ? parsedSalary * 0.02
+        : parsedSalary * (parseInt(SalaryContribution401kAmount) / 100);
+console.log("form data after " , contributionAmount)
+    const greenhouseBenefitsAmount = greenhouseBenefits === "yes" ? 0 : 2400;
+
+    setFormData({
+      ...formData,
+      totalCompensation,
+      SalaryContribution401kAmount: contributionAmount,
+      targetBonusPercentage: (parseInt(targetBonusPercentage) / parsedSalary) * 100,
+      totalOptionsGrantAmount: carrotBenefits === "yes" ? 10852.40 : 0,
+      greenhouseBenefitsAmount,
+      carrotBenefitsAmount: carrotBenefits === "yes" ? 10852.40 : 0,
+      paternityLeaveAmount: paternityLeave === "yes" ? (parsedSalary / 52) * 16 : 0,
+      sabbaticalLeaveAmount: sabbaticalLeave === "yes" ? (parsedSalary / 52) * parseInt(sabbaticalLeaveWeeks) : 0,
+    });
+
+    console.log("Total Compensation", formData);
+
+    setStep(11);
+  };
+
+  const customCountryList = ["United States", "Canada", "Ireland"];
 
   const stepQuestions = [
     "What is your home country?",
     "What is your annual base salary?",
-    "I plan to take paternity leave this year.",
     "I participate in the company’s 401k program.",
     "Are you a sales professional?",
-    "Estimate how many equity shares you have.",
-    "Health benefits selections",
     "What is your target bonus as a percentage (CVP)?",
+    "What are your total options granted? Add all of your equity grants (new hire and, if applicable, Refresh, Arbor leadership)",
     "Do you take advantage of Greenhouse Medical Benefits?",
     "Have you already or do you plan to take advantage of Carrot benefits this year (for family-forming, menopause, low-T)?",
+    "Do you plan to take paternity leave this year?",
+    "If you plan to take sabbatical this year, enter the number of weeks you're eligible to take. If this doesn't apply to you, skip this field.",
   ];
 
   return (
     <div className="flex my-10 relative flex-col">
       {step === 11 ? (
-        <SummaryForm formData={formData} resetForm={resetForm} />
+        <p>
+          <EmployChart data={formData} />
+        </p>
       ) : (
         <form
           id="signUpForm"
           className="px-10 py-10 shadow-md rounded-2xl bg-white mx-auto border-solid border-2 border-gray-100 mb-8 "
-          action="#!"
           style={{ width: "660px" }}
         >
           <h1 className="text-lg font-bold rounded-xl text-white px-4 py-4 bg-green-600 text-center">
@@ -128,9 +164,8 @@ function StepperForm() {
             {stepQuestions.map((question, index) => (
               <li
                 key={index}
-                className={`flex items-center ${
-                  index < step - 1 ? "text-blue-600" : ""
-                }`}
+                className={`flex items-center ${index < step - 1 ? "text-blue-600" : ""
+                  }`}
               >
                 <span className="flex items-center justify-center w-5 h-5 ms-3 text-xs border border-blue-600 rounded-full shrink-0">
                   {index + 1}
@@ -180,34 +215,29 @@ function StepperForm() {
               </select>
             )}
 
-{step === 2 && (
-  <div className="relative">
-    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-      $
-    </span>
-    <input
-      type="number"
-      placeholder="Annual Base Salary"
-      name="salary"
-      value={formData.salary}
-      onChange={handleChange}
-      className="w-full pl-10 px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200 mt-3"
-    />
-  </div>
-)}
-
-
+            {step === 2 && (
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  $
+                </span>
+                <input
+                  type="number"
+                  placeholder="Annual Base Salary"
+                  name="salary"
+                  value={formData.salary}
+                  onChange={handleChange}
+                  className="w-full pl-10 px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200 mt-3"
+                />
+              </div>
+            )}
             {step === 3 && (
               <div>
-                <p className="hidden">
-                  I plan to take paternity leave this year.
-                </p>
-                <label className="flex items-center ">
+                <label className="flex items-center">
                   <input
                     type="radio"
-                    name="paternityLeave"
-                    value="yes"
-                    checked={formData.paternityLeave === "yes"}
+                    name="SalaryContribution401k"
+                    value={"yes"}
+                    checked={formData.SalaryContribution401k === "yes"}
                     onChange={handleChange}
                     className="mr-2 w-6 h-5"
                   />
@@ -215,78 +245,31 @@ function StepperForm() {
                 </label>
                 <label className="flex items-center mt-3 mb-8">
                   <input
+
                     type="radio"
-                    name="paternityLeave"
-                    value="no"
-                    checked={formData.paternityLeave === "no"}
+                    name="SalaryContribution401k"
+                    value={"no"}
+                    checked={formData.SalaryContribution401k === "no"}
                     onChange={handleChange}
                     className="mr-2 w-6 h-5"
                   />
                   No
                 </label>
-                {formData.paternityLeave === "yes" && (
-                  
+                {formData.SalaryContribution401k == "yes" && (
                   <input
                     type="number"
-                    placeholder="How many weeks in the calendar year?"
-                    name="paternityLeaveWeeks"
-                    value={formData.paternityLeaveWeeks}
+                    placeholder="Enter the percentage of your salary you put toward it"
+                    name="SalaryContribution401kAmount"
+                    value={formData.SalaryContribution401kAmount}
                     onChange={handleChange}
                     className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
                   />
                 )}
               </div>
             )}
-
             {step === 4 && (
               <div>
-                <p className="hidden">
-                  I participate in the company’s 401k program.
-                </p>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="participate401k"
-                    value="yes"
-                    checked={formData.participate401k === "yes"}
-                    onChange={handleChange}
-                    className="mr-2 w-6 h-5"
-                  />
-                  Yes
-                </label>
-                <label className="flex items-center mt-3 mb-5">
-                  <input
-                    type="radio"
-                    name="participate401k"
-                    value="no"
-                    checked={formData.participate401k === "no"}
-                    onChange={handleChange}
-                    className="mr-2 w-6 h-5"
-                  />
-                  No
-                </label>
-                {formData.participate401k === "yes" && (
-                  <div className="relative">
-                      <span className="absolute inset-y-0 right-5 flex items-center pl-3">
- %
-    </span>
-                  <input
-                    type="number"
-                    placeholder="What percentage of your salary do you contribute?"
-                    name="contributeTo401k"
-                    value={formData.contributeTo401k}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-md transition-all duration-1000 ease-in-out hover:scale-105 text-gray-700 font-medium border-solid border-2 border-gray-200"
-                  />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {step === 5 && (
-              <div>
-                <p className="hidden">Are you a sales professional?</p>
-                <label className="flex items-center">
+                <label className="flex items-center ">
                   <input
                     type="radio"
                     name="isSalesProfessional"
@@ -297,7 +280,7 @@ function StepperForm() {
                   />
                   Yes
                 </label>
-                <label className="flex items-center mt-3 mb-5">
+                <label className="flex items-center mt-3 mb-8">
                   <input
                     type="radio"
                     name="isSalesProfessional"
@@ -308,33 +291,48 @@ function StepperForm() {
                   />
                   No
                 </label>
-                {formData.isSalesProfessional === "yes" && (
-                          <div className="relative">
-                          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-     $
-        </span>
-                  <input
-                    type="text"
-                    placeholder="Input your target compensation for the year as a dollar amount"
-                    name="targetCompensation"
-                    value={formData.targetCompensation}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
-                    maxLength={500}
-                  />
-                </div>
+                {formData.isSalesProfessional == "yes" && (
+                  <div className="relative">
+                    <p>Provide your target annual variable compensation as a dollar</p>
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                      $
+                    </span>
+                    <input
+                      type="number"
+                      min={0}
+                      name="salesAnnualCompensation"
+                      value={formData.salesAnnualCompensation}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                    />
+                  </div>
                 )}
+              </div>
+            )}
+
+            {step === 5 && (
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  %
+                </span>
+                <input
+                  type="number"
+                  placeholder="Target bonus as a percentage (CVP)"
+                  name="targetBonusPercentage"
+                  value={formData.targetBonusPercentage}
+                  onChange={handleChange}
+                  className="w-full pl-10 px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200 mt-3"
+                />
               </div>
             )}
 
             {step === 6 && (
               <div>
-                <p hidden>Estimate how many equity shares you have.</p>
                 <input
                   type="number"
                   placeholder="Estimate how many equity shares you have"
-                  name="equityShares"
-                  value={formData.equityShares}
+                  name="totalOptionsGranted"
+                  value={formData.totalOptionsGranted}
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
                 />
@@ -342,14 +340,14 @@ function StepperForm() {
             )}
 
             {step === 7 && (
-              <div>
+              <>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      name="includeBenefits"
+                      name="greenhouseBenefits"
                       value="yes"
-                      checked={formData.includeBenefits === "yes"}
+                      checked={formData.greenhouseBenefits === "yes"}
                       onChange={handleChange}
                       className="mr-2 w-6 h-4"
                     />
@@ -358,9 +356,9 @@ function StepperForm() {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      name="includeBenefits"
+                      name="greenhouseBenefits"
                       value="no"
-                      checked={formData.includeBenefits === "no"}
+                      checked={formData.greenhouseBenefits === "no"}
                       onChange={handleChange}
                       className="mr-2 w-6 h-4"
                     />
@@ -368,95 +366,17 @@ function StepperForm() {
                   </label>
                 </div>
 
-                {formData.includeBenefits === "yes" && (
-                  <div>
-                    <p>Benefit Details:</p>
-                    <table className="w-full mb-4">
-                      <thead>
-                        <tr>
-                          <th>Benefit</th>
-                          <th>US</th>
-                          <th>Ireland</th>
-                          <th>Canada</th>
-                          <th>UK</th>
-                        </tr>
-                      </thead>
-                      <tbody>{/* Benefit details here */}</tbody>
-                    </table>
 
-                    <p>Average Employer Spend per Employee:</p>
-                    <ul>
-                      <li>US Benefits: $1180 / $14,160 annually</li>
-                      <li>Canada Benefits: $300 / $3,600 annually</li>
-                      <li>Ireland Benefits: €370 / €4,440 annually</li>
-                    </ul>
-
-                    <p>
-                      Alternatively, you can find the biweekly employer
-                      contribution in Workday under "Benefits" and input it
-                      here:
-                    </p>
-                    <input
-                      type="text"
-                      placeholder="Biweekly employer contribution"
-                      name="biweeklyContribution"
-                      value={formData.biweeklyContribution}
-                      onChange={handleChange}
-                      className="w-full px-4 transition-all duration-1000 ease-in-out hover:scale-105 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
-                    />
-                  </div>
-                )}
-              </div>
+              </>
             )}
 
             {step === 8 && (
-              <div>
-                <input
-                  type="number"
-                  placeholder="Enter your target bonus percentage"
-                  name="targetBonusPercentage"
-                  value={formData.targetBonusPercentage}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
-                />
-              </div>
-            )}
-
-{step === 9 && (
-  <div>
-    <label className="flex items-center">
-      <input
-        type="radio"
-        name="greenhouseBenefits"
-        value="yes"
-        checked={formData.greenhouseBenefits === "yes"}
-        onChange={handleChange}
-        className="mr-2 w-6 h-5"
-      />
-      Yes
-    </label>
-    <label className="flex items-center mt-3 mb-5">
-      <input
-        type="radio"
-        name="greenhouseBenefits"
-        value="no"
-        checked={formData.greenhouseBenefits === "no"}
-        onChange={handleChange}
-        className="mr-2 w-6 h-5"
-      />
-      No
-    </label>
-  </div>
-)}
-
-
-            {step === 10 && (
               <div>
                 <label className="flex items-center">
                   <input
                     type="radio"
                     name="carrotBenefits"
-                    value="yes"
+                    value={"yes"}
                     checked={formData.carrotBenefits === "yes"}
                     onChange={handleChange}
                     className="mr-2 w-6 h-5"
@@ -467,13 +387,83 @@ function StepperForm() {
                   <input
                     type="radio"
                     name="carrotBenefits"
-                    value="no"
+                    value={"no"}
                     checked={formData.carrotBenefits === "no"}
                     onChange={handleChange}
                     className="mr-2 w-6 h-5"
                   />
                   No
                 </label>
+              </div>
+            )}
+
+            {step === 9 && (
+              <div>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="paternityLeave"
+                    value={"yes"}
+                    checked={formData.paternityLeave === "yes"}
+                    onChange={handleChange}
+                    className="mr-2 w-6 h-5"
+                  />
+                  Yes
+                </label>
+                <label className="flex items-center mt-3 mb-5">
+                  <input
+                    type="radio"
+                    name="paternityLeave"
+                    value={"no"}
+                    checked={formData.paternityLeave === "no"}
+                    onChange={handleChange}
+                    className="mr-2 w-6 h-5"
+                  />
+                  No
+                </label>
+
+              </div>
+            )}
+
+
+
+            {step === 10 && (
+              <div>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="sabbaticalLeave"
+                    value={"yes"}
+                    checked={formData.sabbaticalLeave === "yes"}
+                    onChange={handleChange}
+                    className="mr-2 w-6 h-5"
+                  />
+                  Yes
+                </label>
+                <label className="flex items-center mt-3 mb-5">
+                  <input
+                    type="radio"
+                    name="sabbaticalLeave"
+                    value={"no"}
+                    checked={formData.sabbaticalLeave === "no"}
+                    onChange={handleChange}
+                    className="mr-2 w-6 h-5"
+                  />
+                  No
+                </label>
+                {formData.sabbaticalLeave == "yes" && (
+                  <div>
+                    <p className="mb-3">Enter the number of weeks you're eligible to take</p>
+                    <input
+                      type="number"
+                      placeholder="Enter the number of weeks you're eligible to take"
+                      name="sabbaticalLeaveWeeks"
+                      value={formData.sabbaticalLeaveWeeks}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                    />
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -489,14 +479,26 @@ function StepperForm() {
             >
               Previous
             </button>
-            <button
-              type="button"
-              className="border ml- px-10 border-transparent focus:outline-none p-3 rounded-full text-center text-white bg-green-600 hover:bg-green-700 text-lg"
-              onClick={nextStep}
-              disabled={step === 11}
-            >
-              Next
-            </button>
+            {
+              step === 10 ? (
+                <button
+                  type="button"
+                  className="border ml- px-10 border-transparent focus:outline-none p-3 rounded-full text-center text-white bg-green-600 hover:bg-green-700 text-lg"
+                  onClick={onSubmit}
+                >
+                  Submit
+                </button>
+              ) :
+                <button
+                  type="button"
+                  className="border ml- px-10 border-transparent focus:outline-none p-3 rounded-full text-center text-white bg-green-600 hover:bg-green-700 text-lg"
+                  onClick={nextStep}
+                  disabled={step === 11}
+                >
+                  Next
+                </button>
+            }
+
           </div>
         </form>
       )}
