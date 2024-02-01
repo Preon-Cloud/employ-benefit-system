@@ -13,13 +13,18 @@ const EmployChart = ({ data }) => {
     const chartData = [
         { label: "Salary", value: data.salary },
         { label: "401k Contribution", value: data.SalaryContribution401kAmount },
-        { label: "Sales Compensation", value: data.isSalesProfessional === "yes" ? parseInt(data.salesAnnualCompensation) : 0 },
+        { label: "Sales Compensation", value: data.salesAnnualCompensation },
         { label: "Bonus", value: parseInt(data.targetBonusPercentage) },
         { label: "Equity Grants", value: parseInt(data.totalOptionsGrantAmount) },
-        { label: "Greenhouse Benefits", value:parseInt(greenhouseBenefitsAmount) },
+        { label: "Greenhouse Benefits", value:parseInt(data.greenhouseBenefitsAmount) },
         { label: "Carrot Benefits", value: data.carrotBenefitsAmount}, // Assuming 1 for yes, 0 for no
         { label: "Paternity Leave", value: data.paternityLeaveAmount},
         { label: "Sabbatical Leave", value: data.sabbaticalLeaveAmount},
+        { label: "Thrive Stipend", value: data.thriveStipend},
+        { label: "EAP", value: data.EAP},
+        { label: "LifeGuides", value: data.LifeGuides},
+        { label: "Vetster", value: data.Vetster},
+        { label: "ClassPass", value: data.ClassPass},
     ];
 
     console.log("data is here", chartData)
@@ -42,7 +47,7 @@ const EmployChart = ({ data }) => {
         }],
     };
 
-    console.log("chartConfig", chartConfig)
+
     return <Doughnut data={chartConfig} />;
 };
 

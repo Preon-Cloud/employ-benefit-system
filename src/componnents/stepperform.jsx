@@ -84,48 +84,49 @@ function StepperForm() {
       SalaryContribution401k,
       SalaryContribution401kAmount,
       isSalesProfessional,
+      salesAnnualCompensation,
       targetBonusPercentage,
       totalOptionsGranted,
       carrotBenefits,
       paternityLeave,
-      paternityLeaveAmount,
       sabbaticalLeave,
       sabbaticalLeaveWeeks,
       greenhouseBenefits,
     } = formData;
-console.log("form data before " , formData)
+    console.log("form data before ", formData)
     const parsedSalary = parseInt(salary);
 
+const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16 : 0;
     const totalCompensation =
       parsedSalary +
       (SalaryContribution401k === "yes" ? parseInt(SalaryContribution401kAmount) : 0) +
-      (isSalesProfessional === "yes" ? 0 : parsedSalary * (parseInt(targetBonusPercentage) / 100)) +
-      parseInt(totalOptionsGranted) +
-      (carrotBenefits === "yes" ? 10852.40 : 0) +
-      (paternityLeave === "yes" ? parseInt(paternityLeaveAmount) : 0) +
-      (sabbaticalLeave === "yes" ? (parsedSalary / 52) * parseInt(sabbaticalLeaveWeeks) : 0) +
-      1440.00 + 33.60 + 72.00 + 18.00 + 240.00;
-
+      (isSalesProfessional === "yes" ? 0 : parseInt(salesAnnualCompensation) +
+        parseInt(totalOptionsGranted) +
+        (carrotBenefits === "yes" ? 10852.40 : 0) +
+        (paternityLeave === "yes" ? paternityLeaveAmount : 0) +
+        (sabbaticalLeave === "yes" ? (parsedSalary / 52) * parseInt(sabbaticalLeaveWeeks) : 0) +
+        1440.00 + 33.60 + 72.00 + 18.00 + 240.00
+      );
     const contributionAmount =
       parseInt(SalaryContribution401kAmount) > 2
         ? parsedSalary * 0.02
-        : parsedSalary * (parseInt(SalaryContribution401kAmount) / 100);
-console.log("form data after " , contributionAmount)
+        : parsedSalary * ((parseInt(SalaryContribution401kAmount) / parsedSalary) * 100);
+    console.log("COntribution Amount ", contributionAmount)
     const greenhouseBenefitsAmount = greenhouseBenefits === "yes" ? 0 : 2400;
-
+    console.log("greenhouseBenefitsAmount", greenhouseBenefitsAmount)
     setFormData({
       ...formData,
       totalCompensation,
       SalaryContribution401kAmount: contributionAmount,
       targetBonusPercentage: (parseInt(targetBonusPercentage) / parsedSalary) * 100,
-      totalOptionsGrantAmount: carrotBenefits === "yes" ? 10852.40 : 0,
+      totalOptionsGrantAmount: parseInt(totalOptionsGranted),
       greenhouseBenefitsAmount,
       carrotBenefitsAmount: carrotBenefits === "yes" ? 10852.40 : 0,
-      paternityLeaveAmount: paternityLeave === "yes" ? (parsedSalary / 52) * 16 : 0,
+      paternityLeaveAmount:paternityLeaveAmount,
       sabbaticalLeaveAmount: sabbaticalLeave === "yes" ? (parsedSalary / 52) * parseInt(sabbaticalLeaveWeeks) : 0,
     });
 
-    console.log("Total Compensation", formData);
+    console.log("form data after changes", formData);
 
     setStep(11);
   };
