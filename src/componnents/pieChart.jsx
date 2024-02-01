@@ -53,7 +53,7 @@ const EmployChart = ({ data }) => {
     return (
         <div className="relative mt-10">
             <p className="w-96 max-lg:w-auto ml-40 max-lg:ml-0 top-0 left-1/2 max-lg:left-0 transform translate-x-1/2 max-lg:translate-x-0 bg-[#24A47F] text-white text-lg px-10 max-lg:px-5 py-6 rounded-lg shadow-lg">{`Total Compensation: $${totalCompensation.toFixed(2)}`}</p>
-            <div className="w-3/2 ">
+            <div className="w-1/2 ml-60 max-lg:ml-0 max-lg:w-auto">
                 <Doughnut data={chartConfig} />
             </div>
         </div>
