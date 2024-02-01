@@ -22,11 +22,11 @@ function StepperForm() {
     sabbaticalLeave: "",
     sabbaticalLeaveAmount: "",
     sabbaticalLeaveWeeks: "",
-    thriveStipend: 1440.00,
-    EAP: 33.60,
-    LifeGuides: 72.00,
-    Vetster: 18.00,
-    ClassPass: 240.00
+    thriveStipend: 1440.0,
+    EAP: 33.6,
+    LifeGuides: 72.0,
+    Vetster: 18.0,
+    ClassPass: 240.0,
   });
 
   const nextStep = () => {
@@ -37,15 +37,34 @@ function StepperForm() {
     setStep(step - 1);
   };
   const handleChange = (e) => {
-    if (e.target.value === "" || e.target.value === null) return;
-    console.log(e.target.value);
     const { name, value, type, checked } = e.target;
+
+    // Handle case when the field is empty
+    if (value === null || value === undefined) {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : "",
+      }));
+      return;
+    }
+
+    // Handle backspace or delete when the field is empty
+    if (
+      value === "" &&
+      (e.nativeEvent.inputType === "deleteContentBackward" ||
+        e.nativeEvent.inputType === "deleteContentForward")
+    ) {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : "",
+      }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    console.log(formData);
-
   };
 
   const resetForm = () => {
@@ -68,65 +87,77 @@ function StepperForm() {
       paternityLeaveAmount: "",
       sabbaticalLeave: "",
       sabbaticalLeaveWeeks: "",
-      thriveStipend: 1440.00,
-      EAP: 33.60,
-      LifeGuides: 72.00,
-      Vetster: 18.00,
-      ClassPass: 240.00
-
-
+      thriveStipend: 1440.0,
+      EAP: 33.6,
+      LifeGuides: 72.0,
+      Vetster: 18.0,
+      ClassPass: 240.0,
     });
   };
   const onSubmit = () => {
-    // Destructure formData to make it easier to work with
     const {
       salary,
       SalaryContribution401k,
       SalaryContribution401kAmount,
       isSalesProfessional,
-      salesAnnualCompensation,
       targetBonusPercentage,
       totalOptionsGranted,
       carrotBenefits,
       paternityLeave,
+      paternityLeaveAmount,
       sabbaticalLeave,
       sabbaticalLeaveWeeks,
       greenhouseBenefits,
     } = formData;
-    console.log("form data before ", formData)
+    console.log("form data before ", formData);
     const parsedSalary = parseInt(salary);
 
-const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16 : 0;
     const totalCompensation =
       parsedSalary +
-      (SalaryContribution401k === "yes" ? parseInt(SalaryContribution401kAmount) : 0) +
-      (isSalesProfessional === "yes" ? 0 : parseInt(salesAnnualCompensation) +
-        parseInt(totalOptionsGranted) +
-        (carrotBenefits === "yes" ? 10852.40 : 0) +
-        (paternityLeave === "yes" ? paternityLeaveAmount : 0) +
-        (sabbaticalLeave === "yes" ? (parsedSalary / 52) * parseInt(sabbaticalLeaveWeeks) : 0) +
-        1440.00 + 33.60 + 72.00 + 18.00 + 240.00
-      );
+      (SalaryContribution401k === "yes"
+        ? parseInt(SalaryContribution401kAmount)
+        : 0) +
+      (isSalesProfessional === "yes"
+        ? 0
+        : parsedSalary * (parseInt(targetBonusPercentage) / 100)) +
+      parseInt(totalOptionsGranted) +
+      (carrotBenefits === "yes" ? 10852.4 : 0) +
+      (paternityLeave === "yes" ? parseInt(paternityLeaveAmount) : 0) +
+      (sabbaticalLeave === "yes"
+        ? (parsedSalary / 52) * parseInt(sabbaticalLeaveWeeks)
+        : 0) +
+      1440.0 +
+      33.6 +
+      72.0 +
+      18.0 +
+      240.0;
+
     const contributionAmount =
       parseInt(SalaryContribution401kAmount) > 2
         ? parsedSalary * 0.02
-        : parsedSalary * ((parseInt(SalaryContribution401kAmount) / parsedSalary) * 100);
-    console.log("COntribution Amount ", contributionAmount)
+        : parsedSalary *
+          ((parseInt(SalaryContribution401kAmount) / parsedSalary) * 100);
+    console.log("form data after ", contributionAmount);
     const greenhouseBenefitsAmount = greenhouseBenefits === "yes" ? 0 : 2400;
-    console.log("greenhouseBenefitsAmount", greenhouseBenefitsAmount)
+
     setFormData({
       ...formData,
       totalCompensation,
       SalaryContribution401kAmount: contributionAmount,
-      targetBonusPercentage: (parseInt(targetBonusPercentage) / parsedSalary) * 100,
-      totalOptionsGrantAmount: parseInt(totalOptionsGranted),
+      targetBonusPercentage:
+        (parseInt(targetBonusPercentage) / parsedSalary) * 100,
+      totalOptionsGrantAmount: carrotBenefits === "yes" ? 10852.4 : 0,
       greenhouseBenefitsAmount,
-      carrotBenefitsAmount: carrotBenefits === "yes" ? 10852.40 : 0,
-      paternityLeaveAmount:paternityLeaveAmount,
-      sabbaticalLeaveAmount: sabbaticalLeave === "yes" ? (parsedSalary / 52) * parseInt(sabbaticalLeaveWeeks) : 0,
+      carrotBenefitsAmount: carrotBenefits === "yes" ? 10852.4 : 0,
+      paternityLeaveAmount:
+        paternityLeave === "yes" ? (parsedSalary / 52) * 16 : 0,
+      sabbaticalLeaveAmount:
+        sabbaticalLeave === "yes"
+          ? (parsedSalary / 52) * parseInt(sabbaticalLeaveWeeks)
+          : 0,
     });
 
-    console.log("form data after changes", formData);
+    console.log("Total Compensation", formData);
 
     setStep(11);
   };
@@ -138,7 +169,7 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
     "What is your annual base salary?",
     "I participate in the company’s 401k program.",
     "Are you a sales professional?",
-    "What is your target bonus as a percentage (CVP)?",
+    // "What is your target bonus as a percentage (CVP)?",
     "What are your total options granted? Add all of your equity grants (new hire and, if applicable, Refresh, Arbor leadership)",
     "Do you take advantage of Greenhouse Medical Benefits?",
     "Have you already or do you plan to take advantage of Carrot benefits this year (for family-forming, menopause, low-T)?",
@@ -148,46 +179,30 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
 
   return (
     <div className="flex my-10 relative flex-col">
-      {step === 11 ? (
+      {step === 10 ? (
         <p>
           <EmployChart data={formData} />
         </p>
       ) : (
         <form
           id="signUpForm"
-          className="px-10 py-10 shadow-md rounded-2xl bg-white mx-auto border-solid border-2 border-gray-100 mb-8 "
-          style={{ width: "660px" }}
+          className="px-10 py-10 w-1/2 max-lg:w-auto shadow-md rounded-2xl bg-white mx-auto border-solid border-2 border-gray-100 mb-8 "
+          
         >
-          <h1 className="text-lg font-bold rounded-xl text-white px-4 py-4 bg-green-600 text-center">
+          <h1 className="text-lg font-bold rounded-xl text-white px-4 py-4 bg-[#24A47F] text-center">
             Total Reward Calculator
           </h1>
           <ol className="flex w-auto text-sm px-2 py-4 mt-5 font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm">
             {stepQuestions.map((question, index) => (
               <li
                 key={index}
-                className={`flex items-center ${index < step - 1 ? "text-blue-600" : ""
-                  }`}
+                className={`flex items-center ${
+                  index < step - 1 ? "text-[#24A47F] " : ""
+                }`}
               >
-                <span className="flex items-center justify-center w-5 h-5 ms-3 text-xs border border-blue-600 rounded-full shrink-0">
+                <span className="flex items-center justify-center w-6 h-6 ms-7 text-xs border border-blue-600 rounded-full shrink-0">
                   {index + 1}
                 </span>
-                {index !== stepQuestions.length - 1 && (
-                  <svg
-                    className="w-3 h-3 sm:ms-3 rtl:rotate-180"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 12 10"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m7 9 4-4-4-4M1 9l4-4-4-4"
-                    />
-                  </svg>
-                )}
               </li>
             ))}
           </ol>
@@ -218,9 +233,16 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
 
             {step === 2 && (
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  $
-                </span>
+                {formData.country === "Ireland" && (
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 mt-3">
+                    €
+                  </span>
+                )}
+                {formData.country !== "Ireland" && (
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 mt-3">
+                    $
+                  </span>
+                )}
                 <input
                   type="number"
                   placeholder="Annual Base Salary"
@@ -228,9 +250,11 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
                   value={formData.salary}
                   onChange={handleChange}
                   className="w-full pl-10 px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200 mt-3"
+                  style={{ paddingLeft: "2.5rem" }}
                 />
               </div>
             )}
+
             {step === 3 && (
               <div>
                 <label className="flex items-center">
@@ -246,7 +270,6 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
                 </label>
                 <label className="flex items-center mt-3 mb-8">
                   <input
-
                     type="radio"
                     name="SalaryContribution401k"
                     value={"no"}
@@ -257,14 +280,22 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
                   No
                 </label>
                 {formData.SalaryContribution401k == "yes" && (
-                  <input
-                    type="number"
-                    placeholder="Enter the percentage of your salary you put toward it"
-                    name="SalaryContribution401kAmount"
-                    value={formData.SalaryContribution401kAmount}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
-                  />
+                  <div className="relative">
+                    <p className="mb-4 text-lg">
+                      What percentage of your salary do you contribute?
+                    </p>
+                    <span className="absolute  right-0 flex p-3 items-center text-center">
+                      %
+                    </span>
+                    <input
+                      type="number"
+                      placeholder="Enter the percentage of your salary you put toward it"
+                      name="SalaryContribution401kAmount"
+                      value={formData.SalaryContribution401kAmount}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                    />
+                  </div>
                 )}
               </div>
             )}
@@ -294,9 +325,38 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
                 </label>
                 {formData.isSalesProfessional == "yes" && (
                   <div className="relative">
-                    <p>Provide your target annual variable compensation as a dollar</p>
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                      $
+                    <p>
+                      Provide your target annual variable compensation as a
+                      dollar amount
+                    </p>
+                    {formData.country === "Ireland" && (
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 mt-6 ">
+                        €
+                      </span>
+                    )}
+                    {formData.country !== "Ireland" && (
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 mt-6">
+                        $
+                      </span>
+                    )}
+                    <input
+                      type="number"
+                      min={0}
+                      name="salesAnnualCompensation"
+                      value={formData.salesAnnualCompensation}
+                      onChange={handleChange}
+                      className="w-full ml-2 px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200"
+                    />
+                  </div>
+                )}
+                {formData.isSalesProfessional == "no" && (
+                  <div className="relative">
+                    <p>
+                      Provide you target annual bonus (CVP).(and the field needs
+                      to be for a percentage)
+                    </p>
+                    <span className="absolute  right-0 p-3 flex items-center text-center">
+                      %
                     </span>
                     <input
                       type="number"
@@ -311,7 +371,7 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
               </div>
             )}
 
-            {step === 5 && (
+            {/* {step === 5 && (
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                   %
@@ -325,9 +385,9 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
                   className="w-full pl-10 px-4 py-3 transition-all duration-1000 ease-in-out hover:scale-105 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-200 mt-3"
                 />
               </div>
-            )}
+            )} */}
 
-            {step === 6 && (
+            {step === 5 && (
               <div>
                 <input
                   type="number"
@@ -340,9 +400,9 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
               </div>
             )}
 
-            {step === 7 && (
+            {step === 6 && (
               <>
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -354,7 +414,7 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
                     />
                     Yes
                   </label>
-                  <label className="flex items-center">
+                  <label className="flex items-center mt-3 mb-5">
                     <input
                       type="radio"
                       name="greenhouseBenefits"
@@ -366,12 +426,10 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
                     No
                   </label>
                 </div>
-
-
               </>
             )}
 
-            {step === 8 && (
+            {step === 7 && (
               <div>
                 <label className="flex items-center">
                   <input
@@ -398,7 +456,7 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
               </div>
             )}
 
-            {step === 9 && (
+            {step === 8 && (
               <div>
                 <label className="flex items-center">
                   <input
@@ -422,13 +480,10 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
                   />
                   No
                 </label>
-
               </div>
             )}
 
-
-
-            {step === 10 && (
+            {step === 9 && (
               <div>
                 <label className="flex items-center">
                   <input
@@ -454,7 +509,9 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
                 </label>
                 {formData.sabbaticalLeave == "yes" && (
                   <div>
-                    <p className="mb-3">Enter the number of weeks you're eligible to take</p>
+                    <p className="mb-3">
+                      Enter the number of weeks you're eligible to take
+                    </p>
                     <input
                       type="number"
                       placeholder="Enter the number of weeks you're eligible to take"
@@ -480,26 +537,24 @@ const paternityLeaveAmount = paternityLeave === "yes" ? (parsedSalary / 52) * 16
             >
               Previous
             </button>
-            {
-              step === 10 ? (
-                <button
-                  type="button"
-                  className="border ml- px-10 border-transparent focus:outline-none p-3 rounded-full text-center text-white bg-green-600 hover:bg-green-700 text-lg"
-                  onClick={onSubmit}
-                >
-                  Submit
-                </button>
-              ) :
-                <button
-                  type="button"
-                  className="border ml- px-10 border-transparent focus:outline-none p-3 rounded-full text-center text-white bg-green-600 hover:bg-green-700 text-lg"
-                  onClick={nextStep}
-                  disabled={step === 11}
-                >
-                  Next
-                </button>
-            }
-
+            {step === 10 ? (
+              <button
+                type="button"
+                className="border  ml- px-10 border-transparent focus:outline-none p-3 rounded-full text-center text-white bg-[#15372C] hover:bg-[#24A47F] text-lg"
+                onClick={onSubmit}
+              >
+                Submit
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="border px-10 border-transparent focus:outline-none p-2 rounded-full text-center text-white bg-[#15372C]   hover:bg-[#24A47F]hover:bg- text-lg"
+                onClick={nextStep}
+                disabled={step === 10}
+              >
+                Next
+              </button>
+            )}
           </div>
         </form>
       )}
